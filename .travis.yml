@@ -1,0 +1,7 @@
+language: csharp
+mono: none
+dotnet: 3.1
+script:
+  - dotnet restore ./Dapper.CustomTypeHandlers.NuGet/
+  - dotnet build ./Dapper.CustomTypeHandlers.NuGet/
+  - dotnet test ./Dapper.CustomTypeHandlers.NuGet/
