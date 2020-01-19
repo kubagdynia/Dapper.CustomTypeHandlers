@@ -113,3 +113,4 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 | Branch       | Status      |
 |--------------|-------------|
 | [master](https://travis-ci.com/kubagdynia/Dapper.CustomTypeHandlers/branches)       | [![Build Status](https://travis-ci.com/kubagdynia/Dapper.CustomTypeHandlers.svg?branch=master)](https://travis-ci.com/kubagdynia/CustomTypeHandlers)|
+| [develop](https://travis-ci.com/kubagdynia/Dapper.CustomTypeHandlers/branches)       | [![Build Status](https://travis-ci.com/kubagdynia/Dapper.CustomTypeHandlers.svg?branch=develop)](https://travis-ci.com/kubagdynia/CustomTypeHandlers)|
