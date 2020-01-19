@@ -1,4 +1,5 @@
-# Dapper.CustomTypeHandlers
+# Dapper.CustomTypeHandlers [![NuGet Version](https://img.shields.io/nuget/v/Dapper.CustomTypeHandlers.svg?style=flat)](https://www.nuget.org/packages/Dapper.CustomTypeHandlers/) 
+
 Dapper custom type handlers to serialize/deserialize objects to Xml and Json.
 
 ### Installation
