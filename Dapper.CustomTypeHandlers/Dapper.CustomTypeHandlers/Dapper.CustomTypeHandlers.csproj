@@ -5,12 +5,13 @@
     <Authors>Jakub Kurłowicz</Authors>
     <Copyright>2020</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Description>Dapper custom type handlers to serialize/deserialize objects to Xml and Json.</Description>
     <PackageTags>dapper orm xml json database sql customhandlers</PackageTags>
-    <PackageReleaseNotes>Removed unnecessary package references</PackageReleaseNotes>
+    <PackageReleaseNotes>Update project url</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/kubagdynia/Dapper.CustomTypeHandlers</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/kubagdynia/Dapper.CustomTypeHandlers</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
