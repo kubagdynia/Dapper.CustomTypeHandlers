@@ -3,13 +3,18 @@ Dapper custom type handlers to serialize/deserialize objects to Xml and Json.
 
 ### Installation
 Use NuGet Package Manager
-> Install-Package Dapper.CustomTypeHandlers
-
+```
+Install-Package Dapper.CustomTypeHandlers
+```
 or .NET CLI
-> dotnet add package Dapper.CustomTypeHandlers
+```
+dotnet add package Dapper.CustomTypeHandlers
+```
 
 or just copy into the project file to reference the package
-> <PackageReference Include="Dapper.CustomTypeHandlers" Version="0.5.0" />
+```
+<PackageReference Include="Dapper.CustomTypeHandlers" Version="1.0.0" />
+```
 
 ### How to use
 - Create class that implements **IXmlObjectType** or **IJsonObjectType** interface
@@ -84,9 +89,13 @@ Every commit or pull request is built and tested on the Continuous Integration s
 To test locally:
 - Download and install [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download)
 - Clone or download source code
-> git clone https://github.com/kubagdynia/Dapper.CustomTypeHandlers.git
+```
+git clone https://github.com/kubagdynia/Dapper.CustomTypeHandlers.git
+```
 - Start tests from the command line
-> dotnet test ./DapperMappers/
+```
+dotnet test ./DapperMappers/
+```
 
 ### Technologies
 List of technologies, frameworks and libraries used for implementation:
