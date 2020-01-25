@@ -5,10 +5,10 @@
     <Authors>Jakub Kurłowicz</Authors>
     <Copyright>2020</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Description>Dapper custom type handlers to serialize/deserialize objects to Xml and Json.</Description>
     <PackageTags>dapper orm xml json database sql customhandlers</PackageTags>
-    <PackageReleaseNotes>Added ability to pass settings to Json and Xml serializer during registration custom type handlers</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix to registration custom type handlers</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/kubagdynia/Dapper.CustomTypeHandlers</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/kubagdynia/Dapper.CustomTypeHandlers</PackageProjectUrl>

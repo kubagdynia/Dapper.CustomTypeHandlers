@@ -68,6 +68,31 @@ namespace Dapper.CustomTypeHandlers.Tests
         }
         
         [Test, Order(4)]
+        public void When_Custom_Json_Handler_Is_Registered_Exception_Should_Not_Be_Thrown_V2()
+        {
+            ServiceCollection services =
+                new ServiceCollectionBuilder().PrepareServiceCollection(s =>
+                {
+                    s.ResetDapperCustomTypeHandlers();
+                    s.RegisterDapperCustomTypeHandlers(new[] {Assembly.GetExecutingAssembly()});
+                });
+            
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
+
+            using (IServiceScope scope = serviceProvider.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+
+                ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
+
+                TestJsonObject testObject = CreateTestJsonObject();
+
+                // Assert
+                Assert.DoesNotThrowAsync(async () => await testObjectRepository.SaveTestJsonObject(testObject));
+            }
+        }
+        
+        [Test, Order(5)]
         public void When_Custom_Xml_Handler_Is_Not_Registered_Exception_Should_Be_Thrown()
         {
             ServiceCollection services =
@@ -91,7 +116,7 @@ namespace Dapper.CustomTypeHandlers.Tests
             }
         }
         
-        [Test, Order(5)]
+        [Test, Order(6)]
         public void When_Custom_Xml_Handler_Is_Registered_Exception_Should_Not_Be_Thrown()
         {
             ServiceCollection services =
@@ -99,6 +124,31 @@ namespace Dapper.CustomTypeHandlers.Tests
                 {
                     s.ResetDapperCustomTypeHandlers();
                     s.RegisterDapperCustomTypeHandlers(Assembly.GetExecutingAssembly());
+                });
+            
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
+
+            using (IServiceScope scope = serviceProvider.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+
+                ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
+
+                TestXmlObject testObject  = CreateTestXmlObject();
+
+                // Assert
+                Assert.DoesNotThrowAsync(async () => await testObjectRepository.SaveTestXmlObject(testObject));
+            }
+        }
+        
+        [Test, Order(7)]
+        public void When_Custom_Xml_Handler_Is_Registered_Exception_Should_Not_Be_Thrown_V2()
+        {
+            ServiceCollection services =
+                new ServiceCollectionBuilder().PrepareServiceCollection(s =>
+                {
+                    s.ResetDapperCustomTypeHandlers();
+                    s.RegisterDapperCustomTypeHandlers(new[] {Assembly.GetExecutingAssembly()});
                 });
             
             ServiceProvider serviceProvider = services.BuildServiceProvider();
