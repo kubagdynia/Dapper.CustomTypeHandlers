@@ -47,15 +47,6 @@ namespace Dapper.CustomTypeHandlers.Extensions
         /// Register all specified type to be processed by a custom Dapper Xml and Json handlers 
         /// </summary>
         public static void RegisterDapperCustomTypeHandlers(this IServiceCollection services, Assembly[] assemblies,
-            Action<JsonSerializerOptions> jsonSerializerOptions = null,
-            Action<XmlWriterSettings> xmlWriterSettings = null)
-            => RegisterDapperCustomTypeHandlers(services, assemblies, ServiceLifetime.Transient, jsonSerializerOptions,
-                xmlWriterSettings);
-
-        /// <summary>
-        /// Register all specified type to be processed by a custom Dapper Xml and Json handlers 
-        /// </summary>
-        public static void RegisterDapperCustomTypeHandlers(this IServiceCollection services, Assembly[] assemblies,
             ServiceLifetime lifetime = ServiceLifetime.Transient,
             Action<JsonSerializerOptions> jsonSerializerOptions = null,
             Action<XmlWriterSettings> xmlWriterSettings = null)
