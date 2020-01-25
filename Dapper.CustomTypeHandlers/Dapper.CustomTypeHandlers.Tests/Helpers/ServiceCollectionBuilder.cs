@@ -1,19 +1,17 @@
 ﻿using Dapper.CustomTypeHandlers.Tests.DbConnection;
 using Dapper.CustomTypeHandlers.Tests.Repositories;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
-using Dapper.CustomTypeHandlers.Extensions;
+using System;
 
 namespace Dapper.CustomTypeHandlers.Tests.Helpers
 {
-    internal static class ServiceCollectionBuilder
+    internal class ServiceCollectionBuilder
     {
-        public static ServiceCollection PrepareServiceCollection()
+        public ServiceCollection PrepareServiceCollection(Action<ServiceCollection> serviceCollection = null)
         {
             ServiceCollection services = new ServiceCollection();
 
-            // Search the specified assembly and register all classes that implement IXmlObjectType and IJsonObjectType interfaces
-            services.RegisterDapperCustomTypeHandlers(new[] { Assembly.GetExecutingAssembly() });
+            serviceCollection?.Invoke(services);
 
             services.AddTransient<IDbConnectionFactory, SqliteConnectionFactory>();
             services.AddTransient<ITestObjectRepository, TestObjectRepository>();

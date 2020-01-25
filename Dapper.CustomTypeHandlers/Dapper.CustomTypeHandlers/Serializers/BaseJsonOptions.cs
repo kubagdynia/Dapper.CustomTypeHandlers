@@ -2,7 +2,7 @@
 
 namespace Dapper.CustomTypeHandlers.Serializers
 {
-    public class BaseJsonOptions
+    public static class BaseJsonOptions
     {
         public static bool IgnoreNullValues { get; } = true;
         public static JsonNamingPolicy PropertyNamingPolicy { get; } = JsonNamingPolicy.CamelCase;

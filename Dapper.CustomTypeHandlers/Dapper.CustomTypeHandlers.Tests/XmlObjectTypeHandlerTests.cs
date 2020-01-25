@@ -24,7 +24,12 @@ namespace Dapper.CustomTypeHandlers.Tests
         [Test, Order(2)]
         public async Task Xml_Data_Saved_In_DataBase_Should_Be_Properly_Restored()
         {
-            ServiceCollection services = ServiceCollectionBuilder.PrepareServiceCollection();
+            ServiceCollection services =
+                new ServiceCollectionBuilder().PrepareServiceCollection(s =>
+                {
+                    s.ResetDapperCustomTypeHandlers();
+                    s.RegisterDapperCustomTypeHandlers(Assembly.GetExecutingAssembly());
+                });
 
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
@@ -34,28 +39,47 @@ namespace Dapper.CustomTypeHandlers.Tests
 
                 ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
 
-                TestXmlObject testObject = new TestXmlObject
-                {
-                    FirstName = "John",
-                    LastName = "Doe",
-                    StartWork = new DateTime(2018, 06, 01),
-                    Content = new TestXmlContentObject
-                    {
-                        Nick = "JD",
-                        DateOfBirth = new DateTime(1990, 10, 11),
-                        Siblings = 2,
-                        FavoriteDaysOfTheWeek = new List<string>
-                        {
-                            "Friday",
-                            "Saturday"
-                        },
-                        FavoriteNumbers = new List<int> { -502, 444, 0, 777777 }
-                    }
-                };
+                TestXmlObject testObject = CreateFullTestObject();
 
                 // Act
-                await testObjectRepository.SaveTestObject(testObject);
-                TestXmlObject retrievedTestObject = await testObjectRepository.GetTestObject(testObject.Id);
+                await testObjectRepository.SaveTestXmlObject(testObject);
+                TestXmlObject retrievedTestObject = await testObjectRepository.GetTestXmlObject(testObject.Id);
+
+                // Assert
+                retrievedTestObject.Should().NotBeNull();
+                retrievedTestObject.Should().BeEquivalentTo(testObject);
+                retrievedTestObject.Content.Should().BeEquivalentTo(testObject.Content);
+            }
+        }
+        
+        [Test, Order(3)]
+        public async Task Using_XmlCustomSettings_Xml_Data_Saved_In_DataBase_Should_Be_Properly_Restored1()
+        {
+            ServiceCollection services =
+                new ServiceCollectionBuilder().PrepareServiceCollection(s =>
+                {
+                    s.ResetDapperCustomTypeHandlers();
+                    s.RegisterDapperCustomTypeHandlers(Assembly.GetExecutingAssembly(),
+                        xmlWriterSettings: xmlSettings =>
+                        {
+                            xmlSettings.Indent = false;
+                            xmlSettings.OmitXmlDeclaration = false;
+                        });
+                });
+
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
+
+            using (IServiceScope scope = serviceProvider.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+
+                ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
+
+                TestXmlObject testObject = CreateFullTestObject();
+
+                // Act
+                await testObjectRepository.SaveTestXmlObject(testObject);
+                TestXmlObject retrievedTestObject = await testObjectRepository.GetTestXmlObject(testObject.Id);
 
                 // Assert
                 retrievedTestObject.Should().NotBeNull();
@@ -64,10 +88,15 @@ namespace Dapper.CustomTypeHandlers.Tests
             }
         }
 
-        [Test, Order(3)]
+        [Test, Order(4)]
         public async Task Null_Xml_Data_Saved_In_DataBase_Should_Be_Restored_As_Null_Object()
         {
-            ServiceCollection services = ServiceCollectionBuilder.PrepareServiceCollection();
+            ServiceCollection services =
+                new ServiceCollectionBuilder().PrepareServiceCollection(s =>
+                {
+                    s.ResetDapperCustomTypeHandlers();
+                    s.RegisterDapperCustomTypeHandlers(Assembly.GetExecutingAssembly());
+                });
 
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
@@ -86,8 +115,8 @@ namespace Dapper.CustomTypeHandlers.Tests
                 };
 
                 // Act
-                await testObjectRepository.SaveTestObject(testObject);
-                TestXmlObject retrievedTestObject = await testObjectRepository.GetTestObject(testObject.Id);
+                await testObjectRepository.SaveTestXmlObject(testObject);
+                TestXmlObject retrievedTestObject = await testObjectRepository.GetTestXmlObject(testObject.Id);
 
                 // Assert
                 retrievedTestObject.Should().NotBeNull();
@@ -95,5 +124,26 @@ namespace Dapper.CustomTypeHandlers.Tests
                 retrievedTestObject.Content.Should().BeEquivalentTo(testObject.Content);
             }
         }
+
+        private TestXmlObject CreateFullTestObject()
+            => new TestXmlObject
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                StartWork = new DateTime(2018, 06, 01),
+                Content = new TestXmlContentObject
+                {
+                    Nick = "JD",
+                    DateOfBirth = new DateTime(1990, 10, 11),
+                    Siblings = 2,
+                    FavoriteDaysOfTheWeek = new List<string>
+                    {
+                        "Friday",
+                        "Saturday"
+                    },
+                    FavoriteNumbers = new List<int> {-502, 444, 0, 777777}
+                }
+            };
+
     }
 }
