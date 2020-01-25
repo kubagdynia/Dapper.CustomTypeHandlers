@@ -6,8 +6,8 @@ namespace Dapper.CustomTypeHandlers.Tests.Repositories
 {
     internal interface ITestObjectRepository
     {
-        Task<TestXmlObject> GetTestObject(long id);
-        Task SaveTestObject(TestXmlObject testObject);
+        Task<TestXmlObject> GetTestXmlObject(long id);
+        Task SaveTestXmlObject(TestXmlObject testObject);
         Task<TestJsonObject> GetTestJsonObject(long id);
         Task SaveTestJsonObject(TestJsonObject testObject);
     }
@@ -18,7 +18,7 @@ namespace Dapper.CustomTypeHandlers.Tests.Repositories
 
         public TestObjectRepository(IDbConnectionFactory connectionFactory) => _connectionFactory = connectionFactory;
 
-        public async Task<TestXmlObject> GetTestObject(long id)
+        public async Task<TestXmlObject> GetTestXmlObject(long id)
         {
             using (var conn = _connectionFactory.Connection())
             {
@@ -29,7 +29,7 @@ namespace Dapper.CustomTypeHandlers.Tests.Repositories
             }
         }
 
-        public async Task SaveTestObject(TestXmlObject testObject)
+        public async Task SaveTestXmlObject(TestXmlObject testObject)
         {
             using (var conn = _connectionFactory.Connection())
             {

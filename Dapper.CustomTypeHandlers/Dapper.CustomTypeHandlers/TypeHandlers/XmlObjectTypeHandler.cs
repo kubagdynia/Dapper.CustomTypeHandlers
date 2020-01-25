@@ -3,18 +3,18 @@ using System.Data;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using Dapper.CustomTypeHandlers.Serializers;
 
 namespace Dapper.CustomTypeHandlers.TypeHandlers
 {
     public class XmlObjectTypeHandler : SqlMapper.ITypeHandler
     {
-        private static readonly XmlWriterSettings XmlWriterSettings = new XmlWriterSettings
-        {
-            Indent = true,
-            OmitXmlDeclaration = true
-        };
+        private readonly XmlWriterSettings _xmlWriterSettings;
 
-        private static readonly XmlSerializerNamespaces WithoutNamespaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
+        public XmlObjectTypeHandler(XmlWriterSettings xmlWriterSettings)
+        {
+            _xmlWriterSettings = xmlWriterSettings;
+        }
 
         public object Parse(Type destinationType, object value)
         {
@@ -29,7 +29,7 @@ namespace Dapper.CustomTypeHandlers.TypeHandlers
                 return null;
             }
 
-            object result = DeserializeXml(destinationType, value);
+            var result = DeserializeXml(destinationType, value);
             return result;
         }
 
@@ -38,25 +38,25 @@ namespace Dapper.CustomTypeHandlers.TypeHandlers
             parameter.Value = value == null || value is DBNull ? DBNull.Value : SerializeToXml(value);
         }
 
-        private static object SerializeToXml(object value)
+        private object SerializeToXml(object value)
         {
-            XmlSerializer serializer = new XmlSerializer(value.GetType());
+            var serializer = new XmlSerializer(value.GetType());
 
-            using (StringWriter stream = new StringWriter())
+            using (var stream = new StringWriter())
             {
-                using (XmlWriter writer = XmlWriter.Create(stream, XmlWriterSettings))
+                using (var writer = XmlWriter.Create(stream, _xmlWriterSettings))
                 {
-                    serializer.Serialize(writer, value, WithoutNamespaces);
-                    string result = stream.ToString();
+                    serializer.Serialize(writer, value, BaseXmlOptions.WithoutNamespaces);
+                    var result = stream.ToString();
                     return result;
                 }
             }
         }
 
-        private static object DeserializeXml(Type destinationType, object value)
+        private object DeserializeXml(Type destinationType, object value)
         {
-            XmlSerializer serializer = new XmlSerializer(destinationType);
-            using (StringReader stringReader = new StringReader((string)value))
+            var serializer = new XmlSerializer(destinationType);
+            using (var stringReader = new StringReader((string)value))
             {
                 return serializer.Deserialize(stringReader);
             }
