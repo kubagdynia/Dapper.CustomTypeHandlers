@@ -3,6 +3,7 @@ using System.Data;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using Dapper.CustomTypeHandlers.Exceptions;
 using Dapper.CustomTypeHandlers.Serializers;
 
 namespace Dapper.CustomTypeHandlers.TypeHandlers
@@ -20,8 +21,7 @@ namespace Dapper.CustomTypeHandlers.TypeHandlers
         {
             if (!typeof(IXmlObjectType).IsAssignableFrom(destinationType))
             {
-                throw new ArgumentException(
-                    $"'{destinationType}' should implement '{nameof(IXmlObjectType)}' interface.", nameof(destinationType));
+                throw new DapperParseXmlObjectException(destinationType);
             }
 
             if (value == null || value is DBNull)
@@ -29,8 +29,15 @@ namespace Dapper.CustomTypeHandlers.TypeHandlers
                 return null;
             }
 
-            var result = DeserializeXml(destinationType, value);
-            return result;
+            try
+            {
+                var result = DeserializeXml(destinationType, value);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new DapperParseXmlObjectException(value, e);
+            }
         }
 
         public void SetValue(IDbDataParameter parameter, object value)

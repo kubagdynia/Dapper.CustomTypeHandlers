@@ -4,14 +4,6 @@ using System.Threading.Tasks;
 
 namespace Dapper.CustomTypeHandlers.Tests.Repositories
 {
-    internal interface ITestObjectRepository
-    {
-        Task<TestXmlObject> GetTestXmlObject(long id);
-        Task SaveTestXmlObject(TestXmlObject testObject);
-        Task<TestJsonObject> GetTestJsonObject(long id);
-        Task SaveTestJsonObject(TestJsonObject testObject);
-    }
-
     internal class TestObjectRepository : ITestObjectRepository
     {
         private readonly IDbConnectionFactory _connectionFactory;

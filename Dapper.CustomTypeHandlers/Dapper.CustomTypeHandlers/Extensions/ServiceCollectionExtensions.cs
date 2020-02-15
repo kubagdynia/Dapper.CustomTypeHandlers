@@ -14,61 +14,71 @@ namespace Dapper.CustomTypeHandlers.Extensions
         /// <summary>
         /// Register all specified type to be processed by a custom Dapper Xml and Json handlers 
         /// </summary>
+        /// <param name="services"></param>
+        /// <param name="assembly"></param>
+        /// <param name="options"></param>
         public static void RegisterDapperCustomTypeHandlers(this IServiceCollection services, Assembly assembly,
-            Action<JsonSerializerOptions> jsonSerializerOptions)
-            => RegisterDapperCustomTypeHandlers(services, assembly, ServiceLifetime.Transient, jsonSerializerOptions);
-
-        /// <summary>
-        /// Register all specified type to be processed by a custom Dapper Xml and Json handlers 
-        /// </summary>
-        public static void RegisterDapperCustomTypeHandlers(this IServiceCollection services, Assembly assembly,
-            Action<XmlWriterSettings> xmlWriterSettings)
-            => RegisterDapperCustomTypeHandlers(services, assembly, ServiceLifetime.Transient, null, xmlWriterSettings);
-
-        /// <summary>
-        /// Register all specified type to be processed by a custom Dapper Xml and Json handlers 
-        /// </summary>
-        public static void RegisterDapperCustomTypeHandlers(this IServiceCollection services, Assembly assembly,
-            Action<JsonSerializerOptions> jsonSerializerOptions, Action<XmlWriterSettings> xmlWriterSettings)
-            => RegisterDapperCustomTypeHandlers(services, assembly, ServiceLifetime.Transient, jsonSerializerOptions,
-                xmlWriterSettings);
-
-        /// <summary>
-        /// Register all specified type to be processed by a custom Dapper Xml and Json handlers 
-        /// </summary>
-        public static void RegisterDapperCustomTypeHandlers(this IServiceCollection services, Assembly assembly,
-            ServiceLifetime lifetime = ServiceLifetime.Transient,
-            Action<JsonSerializerOptions> jsonSerializerOptions = null,
-            Action<XmlWriterSettings> xmlWriterSettings = null)
-            => RegisterDapperCustomTypeHandlers(services, new[] {assembly}, lifetime, jsonSerializerOptions,
-                xmlWriterSettings);
-
-        /// <summary>
-        /// Register all specified type to be processed by a custom Dapper Xml and Json handlers 
-        /// </summary>
-        public static void RegisterDapperCustomTypeHandlers(this IServiceCollection services, Assembly[] assemblies,
-            ServiceLifetime lifetime = ServiceLifetime.Transient,
-            Action<JsonSerializerOptions> jsonSerializerOptions = null,
-            Action<XmlWriterSettings> xmlWriterSettings = null)
+            Action<DapperCustomTypeHandlersOptions> options = null)
         {
-            // Xml
-            var xmlTypesFromAssemblies =
-                assemblies.SelectMany(a => a.DefinedTypes.Where(x => x.GetInterfaces().Contains(typeof(IXmlObjectType))));
+            RegisterHandlers(new[] {assembly}, options);
+        }
+        
+        /// <summary>
+        /// Register all specified type to be processed by a custom Dapper Xml and Json handlers 
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="assemblies"></param>
+        /// <param name="options"></param>
+        public static void RegisterDapperCustomTypeHandlers(this IServiceCollection services, Assembly[] assemblies,
+            Action<DapperCustomTypeHandlersOptions> options = null)
+        {
+            RegisterHandlers(assemblies, options);
+        }
 
-            var xmlSettings = CreateXmlWriterSettings(xmlWriterSettings);
-            foreach (var type in xmlTypesFromAssemblies)
+        /// <summary>
+        /// Register all specified type to be processed by a custom Dapper Xml and Json handlers 
+        /// </summary>
+        /// <param name="assemblies"></param>
+        /// <param name="options"></param>
+        private static void RegisterHandlers(Assembly[] assemblies, Action<DapperCustomTypeHandlersOptions> options = null)
+        {
+            var opt = new DapperCustomTypeHandlersOptions();
+            options?.Invoke(opt);
+            
+            // Xml
+            if (opt.RegisterXmlObjectTypeHandler)
             {
-                SqlMapper.AddTypeHandler(type, new XmlObjectTypeHandler(xmlSettings));
+                var xmlTypesFromAssemblies =
+                    assemblies.SelectMany(a =>
+                        a.DefinedTypes.Where(x => x.GetInterfaces().Contains(typeof(IXmlObjectType))));
+
+                var xmlSettings = CreateXmlWriterSettings(opt.XmlWriterSettings);
+                foreach (var type in xmlTypesFromAssemblies)
+                {
+                    SqlMapper.AddTypeHandler(type, new XmlObjectTypeHandler(xmlSettings));
+                }
             }
 
             // Json
-            var jsonTypesFromAssemblies =
-                assemblies.SelectMany(a => a.DefinedTypes.Where(x => x.GetInterfaces().Contains(typeof(IJsonObjectType))));
-            
-            var jsonOptions = CreateJsonSerializerOptions(jsonSerializerOptions);
-            foreach (var type in jsonTypesFromAssemblies)
+            if (opt.RegisterJsonObjectTypeHandler)
             {
-                SqlMapper.AddTypeHandler(type, new JsonObjectTypeHandler(jsonOptions));
+                var jsonTypesFromAssemblies =
+                    assemblies.SelectMany(a =>
+                        a.DefinedTypes.Where(x => x.GetInterfaces().Contains(typeof(IJsonObjectType))));
+
+                var jsonOptions = CreateJsonSerializerOptions(opt.JsonSerializerOptions);
+                foreach (var type in jsonTypesFromAssemblies)
+                {
+                    SqlMapper.AddTypeHandler(type, new JsonObjectTypeHandler(jsonOptions));
+                }
+            }
+
+            // Guid
+            if (opt.RegisterGuidTypeHandler)
+            {
+                SqlMapper.AddTypeHandler(new GuidTypeHandler());
+                SqlMapper.RemoveTypeMap(typeof(Guid));
+                SqlMapper.RemoveTypeMap(typeof(Guid?));
             }
         }
 
@@ -78,34 +88,10 @@ namespace Dapper.CustomTypeHandlers.Extensions
         public static void ResetDapperCustomTypeHandlers(this IServiceCollection services)
             => SqlMapper.ResetTypeHandlers();
 
-        private static XmlWriterSettings CreateXmlWriterSettings(Action<XmlWriterSettings> xmlWriterSettings)
-        {
-            var settings = new XmlWriterSettings();
-            if (xmlWriterSettings == null)
-            {
-                settings = BaseXmlOptions.GetXmlWriterSettings;
-            }
-            else
-            {
-                xmlWriterSettings(settings);
-            }
+        private static XmlWriterSettings CreateXmlWriterSettings(XmlWriterSettings xmlWriterSettings = null)
+            => xmlWriterSettings ?? BaseXmlOptions.GetXmlWriterSettings;
 
-            return settings;
-        }
-
-        private static JsonSerializerOptions CreateJsonSerializerOptions(Action<JsonSerializerOptions> jsonOptions)
-        {
-            var jsonSerializerOptions = new JsonSerializerOptions();
-            if (jsonOptions == null)
-            {
-                jsonSerializerOptions = BaseJsonOptions.GetJsonSerializerOptions;
-            }
-            else
-            {
-                jsonOptions(jsonSerializerOptions);
-            }
-
-            return jsonSerializerOptions;
-        }
+        private static JsonSerializerOptions CreateJsonSerializerOptions(JsonSerializerOptions jsonOptions = null)
+            => jsonOptions ?? BaseJsonOptions.GetJsonSerializerOptions;
     }
 }

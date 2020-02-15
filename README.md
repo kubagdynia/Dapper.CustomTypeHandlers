@@ -1,6 +1,6 @@
 # Dapper.CustomTypeHandlers [![NuGet Version](https://img.shields.io/nuget/v/Dapper.CustomTypeHandlers.svg?style=flat)](https://www.nuget.org/packages/Dapper.CustomTypeHandlers/) 
 
-Dapper custom type handlers to serialize/deserialize objects to Xml and Json.
+Dapper custom type handlers to serialize/deserialize objects to Xml and Json. Can be also used to map GUID to a string.
 
 ### Installation
 Use NuGet Package Manager
@@ -14,7 +14,7 @@ dotnet add package Dapper.CustomTypeHandlers
 
 or just copy into the project file to reference the package
 ```
-<PackageReference Include="Dapper.CustomTypeHandlers" Version="1.0.0" />
+<PackageReference Include="Dapper.CustomTypeHandlers" Version="1.2.0" />
 ```
 
 ### How to use
@@ -46,7 +46,7 @@ public class Features
 ```
 - Register these new classes in **Startup.cs**
 ```csharp
-services.RegisterDapperCustomTypeHandlers(new[] { typeof(Book).Assembly });
+services.RegisterDapperCustomTypeHandlers(typeof(Book).Assembly);
 ```
 - Create table in a database that contains a column of the XML type (SQL Server)
 ```sql
@@ -95,7 +95,7 @@ git clone https://github.com/kubagdynia/Dapper.CustomTypeHandlers.git
 ```
 - Start tests from the command line
 ```
-dotnet test ./DapperMappers/
+dotnet test ./Dapper.CustomTypeHandlers/
 ```
 
 ### Technologies

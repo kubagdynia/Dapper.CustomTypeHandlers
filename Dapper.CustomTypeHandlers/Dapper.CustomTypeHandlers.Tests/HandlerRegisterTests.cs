@@ -1,5 +1,7 @@
 using System;
+using System.Data;
 using System.Reflection;
+using System.Threading.Tasks;
 using Dapper.CustomTypeHandlers.Extensions;
 using Dapper.CustomTypeHandlers.Tests.Helpers;
 using Dapper.CustomTypeHandlers.Tests.Models;
@@ -166,6 +168,32 @@ namespace Dapper.CustomTypeHandlers.Tests
             }
         }
 
+        [Test, Order(8)]
+        public void When_Custom_Guid_Handler_Is_Registered_Exception_Should_Not_Be_Thrown()
+        {
+            ServiceCollection services =
+                new ServiceCollectionBuilder().PrepareServiceCollectionForGuidTests(s =>
+                {
+                    s.ResetDapperCustomTypeHandlers();
+                    s.RegisterDapperCustomTypeHandlers(new[] {Assembly.GetExecutingAssembly()});
+                });
+            
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
+
+            using (IServiceScope scope = serviceProvider.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+
+                ITestGuidRepository testGuidRepository = scopedServices.GetRequiredService<ITestGuidRepository>();
+
+                TestGuidObject testGuidObject = CreateTestGuidObject();
+                
+                // Assert
+                Assert.DoesNotThrowAsync(async () => await testGuidRepository.SaveTestGuidObject(testGuidObject));
+                Assert.DoesNotThrowAsync(async () => await testGuidRepository.GetTestGuidObject(testGuidObject.Id));
+            }
+        }
+
         private TestJsonObject CreateTestJsonObject()
             => new TestJsonObject
             {
@@ -182,6 +210,12 @@ namespace Dapper.CustomTypeHandlers.Tests
                 LastName = "Doe",
                 StartWork = new DateTime(2018, 06, 01),
                 Content = null
+            };
+        
+        private TestGuidObject CreateTestGuidObject()
+            => new TestGuidObject
+            {
+                GuidId = Guid.NewGuid()
             };
     }
 }
