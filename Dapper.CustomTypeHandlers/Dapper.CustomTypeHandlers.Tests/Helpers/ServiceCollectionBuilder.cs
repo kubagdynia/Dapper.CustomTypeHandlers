@@ -18,5 +18,17 @@ namespace Dapper.CustomTypeHandlers.Tests.Helpers
 
             return services;
         }
+        
+        public ServiceCollection PrepareServiceCollectionForGuidTests(Action<ServiceCollection> serviceCollection = null)
+        {
+            ServiceCollection services = new ServiceCollection();
+
+            serviceCollection?.Invoke(services);
+
+            services.AddTransient<IDbConnectionFactory, SqliteConnectionFactoryForGuid>();
+            services.AddTransient<ITestGuidRepository, TestGuidRepository>();
+
+            return services;
+        }
     }
 }

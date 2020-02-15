@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Dapper.CustomTypeHandlers.Tests.Helpers;
 using Dapper.CustomTypeHandlers.Extensions;
 using System.Reflection;
+using System.Text.Json;
 
 namespace Dapper.CustomTypeHandlers.Tests
 {
@@ -76,10 +77,13 @@ namespace Dapper.CustomTypeHandlers.Tests
                 new ServiceCollectionBuilder().PrepareServiceCollection(s =>
                 {
                     s.ResetDapperCustomTypeHandlers();
-                    s.RegisterDapperCustomTypeHandlers(Assembly.GetExecutingAssembly(), jsonSerializerOptions: jsonOptions =>
+                    s.RegisterDapperCustomTypeHandlers(Assembly.GetExecutingAssembly(), options =>
                     {
-                        jsonOptions.IgnoreNullValues = false;
-                        jsonOptions.PropertyNamingPolicy = null;
+                        options.JsonSerializerOptions = new JsonSerializerOptions
+                        {
+                            IgnoreNullValues = false,
+                            PropertyNamingPolicy = null
+                        };
                     });
                 });
 

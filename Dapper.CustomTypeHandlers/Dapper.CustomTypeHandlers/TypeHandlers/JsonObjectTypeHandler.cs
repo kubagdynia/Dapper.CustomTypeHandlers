@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Text.Json;
+using Dapper.CustomTypeHandlers.Exceptions;
 
 namespace Dapper.CustomTypeHandlers.TypeHandlers
 {
@@ -17,11 +18,17 @@ namespace Dapper.CustomTypeHandlers.TypeHandlers
         {
             if (!typeof(IJsonObjectType).IsAssignableFrom(destinationType))
             {
-                throw new ArgumentException(
-                    $"'{destinationType}' should implement '{nameof(IJsonObjectType)}' interface.", nameof(destinationType));
+                throw new DapperParseJsonObjectException(destinationType);
             }
 
-            return JsonSerializer.Deserialize(value.ToString(), destinationType, _options);
+            try
+            {
+                return JsonSerializer.Deserialize(value.ToString(), destinationType, _options);
+            }
+            catch (Exception e)
+            {
+                throw new DapperParseJsonObjectException(value, e);
+            }
         }
 
         public void SetValue(IDbDataParameter parameter, object value)

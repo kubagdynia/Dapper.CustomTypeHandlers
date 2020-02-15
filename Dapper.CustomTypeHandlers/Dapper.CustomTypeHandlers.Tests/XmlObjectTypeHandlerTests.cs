@@ -4,11 +4,11 @@ using System;
 using System.Reflection;
 using Dapper.CustomTypeHandlers.Extensions;
 using Dapper.CustomTypeHandlers.Tests.Repositories;
-using Dapper.CustomTypeHandlers.Tests.DbConnection;
 using FluentAssertions;
 using System.Threading.Tasks;
 using Dapper.CustomTypeHandlers.Tests.Models;
 using System.Collections.Generic;
+using System.Xml;
 using Dapper.CustomTypeHandlers.Tests.Helpers;
 
 namespace Dapper.CustomTypeHandlers.Tests
@@ -59,12 +59,14 @@ namespace Dapper.CustomTypeHandlers.Tests
                 new ServiceCollectionBuilder().PrepareServiceCollection(s =>
                 {
                     s.ResetDapperCustomTypeHandlers();
-                    s.RegisterDapperCustomTypeHandlers(Assembly.GetExecutingAssembly(),
-                        xmlWriterSettings: xmlSettings =>
+                    s.RegisterDapperCustomTypeHandlers(Assembly.GetExecutingAssembly(), options =>
+                    {
+                        options.XmlWriterSettings = new XmlWriterSettings
                         {
-                            xmlSettings.Indent = false;
-                            xmlSettings.OmitXmlDeclaration = false;
-                        });
+                            Indent = false,
+                            OmitXmlDeclaration = false
+                        };
+                    });
                 });
 
             ServiceProvider serviceProvider = services.BuildServiceProvider();
