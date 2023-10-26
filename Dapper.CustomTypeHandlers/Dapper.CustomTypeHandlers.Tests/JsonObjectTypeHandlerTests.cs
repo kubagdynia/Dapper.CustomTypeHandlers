@@ -10,6 +10,7 @@ using Dapper.CustomTypeHandlers.Tests.Helpers;
 using Dapper.CustomTypeHandlers.Extensions;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Dapper.CustomTypeHandlers.Tests
 {
@@ -18,7 +19,7 @@ namespace Dapper.CustomTypeHandlers.Tests
         [Test, Order(1)]
         public void Always_Success_Test_Should_Be_Ok()
         {
-            1.Should().Equals(1);
+            1.Should().Be(1);
         }
 
         [Test, Order(2)]
@@ -81,7 +82,7 @@ namespace Dapper.CustomTypeHandlers.Tests
                     {
                         options.JsonSerializerOptions = new JsonSerializerOptions
                         {
-                            IgnoreNullValues = false,
+                            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                             PropertyNamingPolicy = null
                         };
                     });

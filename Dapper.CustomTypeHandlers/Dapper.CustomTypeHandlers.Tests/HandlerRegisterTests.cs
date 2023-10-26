@@ -1,7 +1,5 @@
 using System;
-using System.Data;
 using System.Reflection;
-using System.Threading.Tasks;
 using Dapper.CustomTypeHandlers.Extensions;
 using Dapper.CustomTypeHandlers.Tests.Helpers;
 using Dapper.CustomTypeHandlers.Tests.Models;
@@ -17,7 +15,7 @@ namespace Dapper.CustomTypeHandlers.Tests
         [Test, Order(1)]
         public void Always_Success_Test_Should_Be_Ok()
         {
-            1.Should().Equals(1);
+            1.Should().Be(1);
         }
 
         [Test, Order(2)]
