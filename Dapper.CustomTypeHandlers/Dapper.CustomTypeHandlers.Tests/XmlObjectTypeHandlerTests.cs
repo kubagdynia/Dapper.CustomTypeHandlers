@@ -15,13 +15,7 @@ namespace Dapper.CustomTypeHandlers.Tests
 {
     public class XmlObjectTypeHandlerTests
     {
-        [Test, Order(1)]
-        public void Always_Success_Test_Should_Be_Ok()
-        {
-            1.Should().Equals(1);
-        }
-
-        [Test, Order(2)]
+        [Test]
         public async Task Xml_Data_Saved_In_DataBase_Should_Be_Properly_Restored()
         {
             ServiceCollection services =
@@ -33,26 +27,24 @@ namespace Dapper.CustomTypeHandlers.Tests
 
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            using (IServiceScope scope = serviceProvider.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
+            using IServiceScope scope = serviceProvider.CreateScope();
+            var scopedServices = scope.ServiceProvider;
 
-                ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
+            ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
 
-                TestXmlObject testObject = CreateFullTestObject();
+            TestXmlObject testObject = CreateFullTestObject();
 
-                // Act
-                await testObjectRepository.SaveTestXmlObject(testObject);
-                TestXmlObject retrievedTestObject = await testObjectRepository.GetTestXmlObject(testObject.Id);
+            // Act
+            await testObjectRepository.SaveTestXmlObject(testObject);
+            TestXmlObject retrievedTestObject = await testObjectRepository.GetTestXmlObject(testObject.Id);
 
-                // Assert
-                retrievedTestObject.Should().NotBeNull();
-                retrievedTestObject.Should().BeEquivalentTo(testObject);
-                retrievedTestObject.Content.Should().BeEquivalentTo(testObject.Content);
-            }
+            // Assert
+            retrievedTestObject.Should().NotBeNull();
+            retrievedTestObject.Should().BeEquivalentTo(testObject);
+            retrievedTestObject.Content.Should().BeEquivalentTo(testObject.Content);
         }
         
-        [Test, Order(3)]
+        [Test]
         public async Task Using_XmlCustomSettings_Xml_Data_Saved_In_DataBase_Should_Be_Properly_Restored1()
         {
             ServiceCollection services =
@@ -71,26 +63,24 @@ namespace Dapper.CustomTypeHandlers.Tests
 
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            using (IServiceScope scope = serviceProvider.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
+            using IServiceScope scope = serviceProvider.CreateScope();
+            var scopedServices = scope.ServiceProvider;
 
-                ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
+            ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
 
-                TestXmlObject testObject = CreateFullTestObject();
+            TestXmlObject testObject = CreateFullTestObject();
 
-                // Act
-                await testObjectRepository.SaveTestXmlObject(testObject);
-                TestXmlObject retrievedTestObject = await testObjectRepository.GetTestXmlObject(testObject.Id);
+            // Act
+            await testObjectRepository.SaveTestXmlObject(testObject);
+            TestXmlObject retrievedTestObject = await testObjectRepository.GetTestXmlObject(testObject.Id);
 
-                // Assert
-                retrievedTestObject.Should().NotBeNull();
-                retrievedTestObject.Should().BeEquivalentTo(testObject);
-                retrievedTestObject.Content.Should().BeEquivalentTo(testObject.Content);
-            }
+            // Assert
+            retrievedTestObject.Should().NotBeNull();
+            retrievedTestObject.Should().BeEquivalentTo(testObject);
+            retrievedTestObject.Content.Should().BeEquivalentTo(testObject.Content);
         }
 
-        [Test, Order(4)]
+        [Test]
         public async Task Null_Xml_Data_Saved_In_DataBase_Should_Be_Restored_As_Null_Object()
         {
             ServiceCollection services =
@@ -102,33 +92,31 @@ namespace Dapper.CustomTypeHandlers.Tests
 
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            using (IServiceScope scope = serviceProvider.CreateScope())
+            using IServiceScope scope = serviceProvider.CreateScope();
+            var scopedServices = scope.ServiceProvider;
+
+            ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
+
+            TestXmlObject testObject = new TestXmlObject
             {
-                var scopedServices = scope.ServiceProvider;
+                FirstName = "John",
+                LastName = "Doe",
+                StartWork = new DateTime(2018, 06, 01),
+                Content = null
+            };
 
-                ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
+            // Act
+            await testObjectRepository.SaveTestXmlObject(testObject);
+            TestXmlObject retrievedTestObject = await testObjectRepository.GetTestXmlObject(testObject.Id);
 
-                TestXmlObject testObject = new TestXmlObject
-                {
-                    FirstName = "John",
-                    LastName = "Doe",
-                    StartWork = new DateTime(2018, 06, 01),
-                    Content = null
-                };
-
-                // Act
-                await testObjectRepository.SaveTestXmlObject(testObject);
-                TestXmlObject retrievedTestObject = await testObjectRepository.GetTestXmlObject(testObject.Id);
-
-                // Assert
-                retrievedTestObject.Should().NotBeNull();
-                retrievedTestObject.Should().BeEquivalentTo(testObject);
-                retrievedTestObject.Content.Should().BeEquivalentTo(testObject.Content);
-            }
+            // Assert
+            retrievedTestObject.Should().NotBeNull();
+            retrievedTestObject.Should().BeEquivalentTo(testObject);
+            retrievedTestObject.Content.Should().BeEquivalentTo(testObject.Content);
         }
 
         private TestXmlObject CreateFullTestObject()
-            => new TestXmlObject
+            => new()
             {
                 FirstName = "John",
                 LastName = "Doe",

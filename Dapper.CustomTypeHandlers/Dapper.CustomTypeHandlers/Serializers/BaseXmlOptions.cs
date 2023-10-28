@@ -9,13 +9,12 @@ namespace Dapper.CustomTypeHandlers.Serializers
         
         public static bool OmitXmlDeclaration { get; } = true;
         
-        public static XmlWriterSettings GetXmlWriterSettings { get; } = new XmlWriterSettings
+        public static XmlWriterSettings GetXmlWriterSettings { get; } = new()
         {
             Indent = Indent,
             OmitXmlDeclaration = OmitXmlDeclaration
         };
 
-        public static readonly XmlSerializerNamespaces WithoutNamespaces =
-            new XmlSerializerNamespaces(new[] {XmlQualifiedName.Empty});
+        public static readonly XmlSerializerNamespaces WithoutNamespaces = new(new[] { XmlQualifiedName.Empty });
     }
 }

@@ -13,13 +13,7 @@ namespace Dapper.CustomTypeHandlers.Tests
 {
     public class GuidTypeHandlerTests
     {
-        [Test, Order(1)]
-        public void Always_Success_Test_Should_Be_Ok()
-        {
-            1.Should().Equals(1);
-        }
-
-        [Test, Order(2)]
+        [Test]
         public async Task Guid_Data_Saved_In_DataBase_Should_Be_Properly_Restored()
         {
             ServiceCollection services =
@@ -31,26 +25,25 @@ namespace Dapper.CustomTypeHandlers.Tests
 
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            using (IServiceScope scope = serviceProvider.CreateScope())
+            using IServiceScope scope = serviceProvider.CreateScope();
+            
+            var scopedServices = scope.ServiceProvider;
+                
+            ITestGuidRepository testGuidRepository = scopedServices.GetRequiredService<ITestGuidRepository>();
+                
+            TestGuidObject testGuidObject = new TestGuidObject
             {
-                var scopedServices = scope.ServiceProvider;
+                GuidId = Guid.NewGuid()
+            };
                 
-                ITestGuidRepository testGuidRepository = scopedServices.GetRequiredService<ITestGuidRepository>();
+            // Act
+            await testGuidRepository.SaveTestGuidObject(testGuidObject);
+            TestGuidObject retrievedTestGuidObject = await testGuidRepository.GetTestGuidObject(testGuidObject.Id);
                 
-                TestGuidObject testGuidObject = new TestGuidObject
-                {
-                    GuidId = Guid.NewGuid()
-                };
-                
-                // Act
-                await testGuidRepository.SaveTestGuidObject(testGuidObject);
-                TestGuidObject retrievedTestGuidObject = await testGuidRepository.GetTestGuidObject(testGuidObject.Id);
-                
-                // Assert
-                retrievedTestGuidObject.Should().NotBeNull();
-                retrievedTestGuidObject.Should().BeEquivalentTo(testGuidObject);
-                retrievedTestGuidObject.GuidId.Should().Be(testGuidObject.GuidId);
-            }
+            // Assert
+            retrievedTestGuidObject.Should().NotBeNull();
+            retrievedTestGuidObject.Should().BeEquivalentTo(testGuidObject);
+            retrievedTestGuidObject.GuidId.Should().Be(testGuidObject.GuidId);
         }
     }
 }

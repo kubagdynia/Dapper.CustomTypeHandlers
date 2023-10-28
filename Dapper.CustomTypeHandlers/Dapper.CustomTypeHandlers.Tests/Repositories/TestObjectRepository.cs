@@ -12,48 +12,40 @@ namespace Dapper.CustomTypeHandlers.Tests.Repositories
 
         public async Task<TestXmlObject> GetTestXmlObject(long id)
         {
-            using (var conn = _connectionFactory.Connection())
-            {
-                TestXmlObject result = await conn.QueryFirstAsync<TestXmlObject>(
-                    @"SELECT Id, FirstName, LastName, StartWork, Content FROM Test_Objects WHERE Id = @id", new { id });
+            using var conn = _connectionFactory.Connection();
+            TestXmlObject result = await conn.QueryFirstAsync<TestXmlObject>(
+                @"SELECT Id, FirstName, LastName, StartWork, Content FROM Test_Objects WHERE Id = @id", new { id });
 
-                return result;
-            }
+            return result;
         }
 
         public async Task SaveTestXmlObject(TestXmlObject testObject)
         {
-            using (var conn = _connectionFactory.Connection())
-            {
-                testObject.Id = await conn.QueryFirstAsync<long>(
-                    @"INSERT INTO Test_Objects (FirstName, LastName, StartWork, Content)
+            using var conn = _connectionFactory.Connection();
+            testObject.Id = await conn.QueryFirstAsync<long>(
+                @"INSERT INTO Test_Objects (FirstName, LastName, StartWork, Content)
                          VALUES (@FirstName, @LastName, @StartWork, @Content);
                       select last_insert_rowid()", testObject);
-            }
         }
 
         public async Task<TestJsonObject> GetTestJsonObject(long id)
         {
-            using (var conn = _connectionFactory.Connection())
-            {
-                var result = await conn.QueryFirstAsync<TestJsonObject>(
-                    @"SELECT Id, FirstName, LastName, StartWork, Content
+            using var conn = _connectionFactory.Connection();
+            var result = await conn.QueryFirstAsync<TestJsonObject>(
+                @"SELECT Id, FirstName, LastName, StartWork, Content
                       FROM Test_Objects
                       WHERE Id = @id", new { id });
 
-                return result;
-            }
+            return result;
         }
 
         public async Task SaveTestJsonObject(TestJsonObject testObject)
         {
-            using (var conn = _connectionFactory.Connection())
-            {
-                testObject.Id = await conn.QueryFirstAsync<long>(
-                    @"INSERT INTO Test_Objects (FirstName, LastName, StartWork, Content)
+            using var conn = _connectionFactory.Connection();
+            testObject.Id = await conn.QueryFirstAsync<long>(
+                @"INSERT INTO Test_Objects (FirstName, LastName, StartWork, Content)
                          VALUES (@FirstName, @LastName, @StartWork, @Content);
                       select last_insert_rowid()", testObject);
-            }
         }
     }
 }

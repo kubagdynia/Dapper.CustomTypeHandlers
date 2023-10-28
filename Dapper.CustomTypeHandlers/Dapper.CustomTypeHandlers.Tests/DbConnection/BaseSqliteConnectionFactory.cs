@@ -8,13 +8,10 @@ namespace Dapper.CustomTypeHandlers.Tests.DbConnection
     internal abstract class BaseSqliteConnectionFactory : IDbConnectionFactory
     {
         private readonly string _fileName;
-        private readonly bool _deleteDbOnExit;
 
-        public BaseSqliteConnectionFactory(string dbFilename, bool deleteDbOnExit = true)
+        protected BaseSqliteConnectionFactory(string dbFilename)
         {
             _fileName = Path.Combine(Environment.CurrentDirectory, dbFilename);
-            _deleteDbOnExit = deleteDbOnExit;
-
             InitializeDatabase();
         }
 
@@ -31,32 +28,7 @@ namespace Dapper.CustomTypeHandlers.Tests.DbConnection
             return Connection();
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                CleanUp();
-            }
-        }
-
-        public abstract void CreateDb(IDbConnection dbConnection);
-
-        private void CleanUp()
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-
-            if (_deleteDbOnExit && File.Exists(_fileName))
-            {
-                File.Delete(_fileName);
-            }
-        }
+        protected abstract void CreateDb(IDbConnection dbConnection);
 
         private void InitializeDatabase()
         {
@@ -68,17 +40,15 @@ namespace Dapper.CustomTypeHandlers.Tests.DbConnection
             FileStream fileStream = File.Create(_fileName);
             fileStream.Close();
 
-            using (var conn = Connection())
+            using var conn = Connection();
+            conn.Open();
+            try
             {
-                conn.Open();
-                try
-                {
-                    CreateDb(conn);
-                }
-                finally
-                {
-                    conn.Close();
-                }
+                CreateDb(conn);
+            }
+            finally
+            {
+                conn.Close();
             }
         }
     }

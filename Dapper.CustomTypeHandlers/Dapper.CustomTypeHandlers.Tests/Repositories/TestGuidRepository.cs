@@ -16,20 +16,17 @@ namespace Dapper.CustomTypeHandlers.Tests.Repositories
         public async Task<TestGuidObject> GetTestGuidObject(long id)
         {
             using var conn = _connectionFactory.Connection();
+            TestGuidObject result = await conn.QueryFirstAsync<TestGuidObject>(
+                $"SELECT Id, GuidId FROM {TableName} WHERE Id = @id", new { id });
 
-            var result = await conn.QueryFirstAsync<TestGuidObject>(
-                $"SELECT Id, GuidId FROM {TableName} WHERE Id = @id", new {id});
-            
             return result;
         }
 
         public async Task SaveTestGuidObject(TestGuidObject testObject)
         {
             using var conn = _connectionFactory.Connection();
-
             testObject.Id = await conn.QueryFirstAsync<long>(
                 $"INSERT INTO {TableName} (GuidId) VALUES (@GuidId); SELECT last_insert_rowid()", testObject);
-
         }
     }
 }
