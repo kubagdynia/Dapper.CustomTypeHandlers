@@ -10,7 +10,7 @@ namespace Dapper.CustomTypeHandlers.Tests.DbConnection
 
         }
 
-        public override void CreateDb(IDbConnection dbConnection)
+        protected override void CreateDb(IDbConnection dbConnection)
         {
             dbConnection.Execute(
                 @"CREATE TABLE Test_Objects

@@ -24,7 +24,7 @@ namespace Dapper.CustomTypeHandlers.TypeHandlers
                 throw new DapperParseXmlObjectException(destinationType);
             }
 
-            if (value == null || value is DBNull)
+            if (value is null or DBNull)
             {
                 return null;
             }
@@ -42,31 +42,25 @@ namespace Dapper.CustomTypeHandlers.TypeHandlers
 
         public void SetValue(IDbDataParameter parameter, object value)
         {
-            parameter.Value = value == null || value is DBNull ? DBNull.Value : SerializeToXml(value);
+            parameter.Value = value is null or DBNull ? DBNull.Value : SerializeToXml(value);
         }
 
         private object SerializeToXml(object value)
         {
             var serializer = new XmlSerializer(value.GetType());
 
-            using (var stream = new StringWriter())
-            {
-                using (var writer = XmlWriter.Create(stream, _xmlWriterSettings))
-                {
-                    serializer.Serialize(writer, value, BaseXmlOptions.WithoutNamespaces);
-                    var result = stream.ToString();
-                    return result;
-                }
-            }
+            using var stream = new StringWriter();
+            using var writer = XmlWriter.Create(stream, _xmlWriterSettings);
+            serializer.Serialize(writer, value, BaseXmlOptions.WithoutNamespaces);
+            var result = stream.ToString();
+            return result;
         }
 
         private object DeserializeXml(Type destinationType, object value)
         {
             var serializer = new XmlSerializer(destinationType);
-            using (var stringReader = new StringReader((string)value))
-            {
-                return serializer.Deserialize(stringReader);
-            }
+            using var stringReader = new StringReader((string)value);
+            return serializer.Deserialize(stringReader);
         }
     }
 }

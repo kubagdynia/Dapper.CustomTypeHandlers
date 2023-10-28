@@ -14,7 +14,7 @@ dotnet add package Dapper.CustomTypeHandlers
 
 or just copy into the project file to reference the package
 ```
-<PackageReference Include="Dapper.CustomTypeHandlers" Version="1.2.0" />
+<PackageReference Include="Dapper.CustomTypeHandlers" Version="6.0.0" />
 ```
 
 ### How to use
@@ -85,10 +85,10 @@ public async Task SaveBook(Book book)
 ```
 
 ### How to Test
-Every commit or pull request is built and tested on the Continuous Integration system ([Travis CI](https://travis-ci.com/kubagdynia/Dapper.CustomTypeHandlers/branches)).
+Every commit or pull request is built and tested on the Continuous Integration system.
 
 To test locally:
-- Download and install [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download)
+- Download and install [.NET 6.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 - Clone or download source code
 ```
 git clone https://github.com/kubagdynia/Dapper.CustomTypeHandlers.git
@@ -100,7 +100,7 @@ dotnet test ./Dapper.CustomTypeHandlers/
 
 ### Technologies
 List of technologies, frameworks and libraries used for implementation:
-- [.NET Core 3.1](https://dotnet.microsoft.com/download) (platform)
+- [.NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) (platform)
 - [Dapper](https://github.com/StackExchange/Dapper) (micro ORM)
 - [System.Text.Json](https://www.nuget.org/packages/System.Text.Json) (JSON serialization/deserialization)
 - [NUnit](https://nunit.org/) (testing framework)
@@ -109,9 +109,3 @@ List of technologies, frameworks and libraries used for implementation:
 
 ### License
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
-
-### Builds and Tests
-| Branch       | Status      |
-|--------------|-------------|
-| [master](https://travis-ci.com/kubagdynia/Dapper.CustomTypeHandlers/branches)       | [![Build Status](https://travis-ci.com/kubagdynia/Dapper.CustomTypeHandlers.svg?branch=master)](https://travis-ci.com/kubagdynia/CustomTypeHandlers)|
-| [develop](https://travis-ci.com/kubagdynia/Dapper.CustomTypeHandlers/branches)       | [![Build Status](https://travis-ci.com/kubagdynia/Dapper.CustomTypeHandlers.svg?branch=develop)](https://travis-ci.com/kubagdynia/CustomTypeHandlers)|

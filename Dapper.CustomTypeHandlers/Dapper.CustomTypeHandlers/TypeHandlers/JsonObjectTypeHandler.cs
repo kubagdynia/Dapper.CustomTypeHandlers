@@ -33,7 +33,7 @@ namespace Dapper.CustomTypeHandlers.TypeHandlers
 
         public void SetValue(IDbDataParameter parameter, object value)
         {
-            parameter.Value = value == null || value is DBNull ? (object)DBNull.Value : JsonSerializer.Serialize(value, _options);
+            parameter.Value = value is null or DBNull ? DBNull.Value : JsonSerializer.Serialize(value, _options);
             parameter.DbType = DbType.String;
         }
     }

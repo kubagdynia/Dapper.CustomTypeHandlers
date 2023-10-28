@@ -1,12 +1,9 @@
 using System;
-using System.Data;
 using System.Reflection;
-using System.Threading.Tasks;
 using Dapper.CustomTypeHandlers.Extensions;
 using Dapper.CustomTypeHandlers.Tests.Helpers;
 using Dapper.CustomTypeHandlers.Tests.Models;
 using Dapper.CustomTypeHandlers.Tests.Repositories;
-using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
@@ -14,13 +11,7 @@ namespace Dapper.CustomTypeHandlers.Tests
 {
     public class HandlerRegisterTests
     {
-        [Test, Order(1)]
-        public void Always_Success_Test_Should_Be_Ok()
-        {
-            1.Should().Equals(1);
-        }
-
-        [Test, Order(2)]
+        [Test]
         public void When_Custom_Json_Handler_Is_Not_Registered_Exception_Should_Be_Thrown()
         {
             ServiceCollection services =
@@ -31,20 +22,18 @@ namespace Dapper.CustomTypeHandlers.Tests
             
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            using (IServiceScope scope = serviceProvider.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
+            using IServiceScope scope = serviceProvider.CreateScope();
+            var scopedServices = scope.ServiceProvider;
 
-                ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
+            ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
 
-                TestJsonObject testObject = CreateTestJsonObject();
+            TestJsonObject testObject = CreateTestJsonObject();
 
-                // Assert
-                Assert.ThrowsAsync<NotSupportedException>(async () => await testObjectRepository.SaveTestJsonObject(testObject));
-            }
+            // Assert
+            Assert.ThrowsAsync<NotSupportedException>(async () => await testObjectRepository.SaveTestJsonObject(testObject));
         }
         
-        [Test, Order(3)]
+        [Test]
         public void When_Custom_Json_Handler_Is_Registered_Exception_Should_Not_Be_Thrown()
         {
             ServiceCollection services =
@@ -56,20 +45,18 @@ namespace Dapper.CustomTypeHandlers.Tests
             
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            using (IServiceScope scope = serviceProvider.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
+            using IServiceScope scope = serviceProvider.CreateScope();
+            var scopedServices = scope.ServiceProvider;
 
-                ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
+            ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
 
-                TestJsonObject testObject = CreateTestJsonObject();
+            TestJsonObject testObject = CreateTestJsonObject();
 
-                // Assert
-                Assert.DoesNotThrowAsync(async () => await testObjectRepository.SaveTestJsonObject(testObject));
-            }
+            // Assert
+            Assert.DoesNotThrowAsync(async () => await testObjectRepository.SaveTestJsonObject(testObject));
         }
         
-        [Test, Order(4)]
+        [Test]
         public void When_Custom_Json_Handler_Is_Registered_Exception_Should_Not_Be_Thrown_V2()
         {
             ServiceCollection services =
@@ -81,20 +68,18 @@ namespace Dapper.CustomTypeHandlers.Tests
             
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            using (IServiceScope scope = serviceProvider.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
+            using IServiceScope scope = serviceProvider.CreateScope();
+            var scopedServices = scope.ServiceProvider;
 
-                ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
+            ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
 
-                TestJsonObject testObject = CreateTestJsonObject();
+            TestJsonObject testObject = CreateTestJsonObject();
 
-                // Assert
-                Assert.DoesNotThrowAsync(async () => await testObjectRepository.SaveTestJsonObject(testObject));
-            }
+            // Assert
+            Assert.DoesNotThrowAsync(async () => await testObjectRepository.SaveTestJsonObject(testObject));
         }
         
-        [Test, Order(5)]
+        [Test]
         public void When_Custom_Xml_Handler_Is_Not_Registered_Exception_Should_Be_Thrown()
         {
             ServiceCollection services =
@@ -105,20 +90,18 @@ namespace Dapper.CustomTypeHandlers.Tests
             
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            using (IServiceScope scope = serviceProvider.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
+            using IServiceScope scope = serviceProvider.CreateScope();
+            var scopedServices = scope.ServiceProvider;
 
-                ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
+            ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
 
-                TestXmlObject testObject  = CreateTestXmlObject();
+            TestXmlObject testObject  = CreateTestXmlObject();
 
-                // Assert
-                Assert.ThrowsAsync<NotSupportedException>(async () => await testObjectRepository.SaveTestXmlObject(testObject));
-            }
+            // Assert
+            Assert.ThrowsAsync<NotSupportedException>(async () => await testObjectRepository.SaveTestXmlObject(testObject));
         }
         
-        [Test, Order(6)]
+        [Test]
         public void When_Custom_Xml_Handler_Is_Registered_Exception_Should_Not_Be_Thrown()
         {
             ServiceCollection services =
@@ -130,20 +113,18 @@ namespace Dapper.CustomTypeHandlers.Tests
             
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            using (IServiceScope scope = serviceProvider.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
+            using IServiceScope scope = serviceProvider.CreateScope();
+            var scopedServices = scope.ServiceProvider;
 
-                ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
+            ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
 
-                TestXmlObject testObject  = CreateTestXmlObject();
+            TestXmlObject testObject  = CreateTestXmlObject();
 
-                // Assert
-                Assert.DoesNotThrowAsync(async () => await testObjectRepository.SaveTestXmlObject(testObject));
-            }
+            // Assert
+            Assert.DoesNotThrowAsync(async () => await testObjectRepository.SaveTestXmlObject(testObject));
         }
         
-        [Test, Order(7)]
+        [Test]
         public void When_Custom_Xml_Handler_Is_Registered_Exception_Should_Not_Be_Thrown_V2()
         {
             ServiceCollection services =
@@ -155,20 +136,18 @@ namespace Dapper.CustomTypeHandlers.Tests
             
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            using (IServiceScope scope = serviceProvider.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
+            using IServiceScope scope = serviceProvider.CreateScope();
+            var scopedServices = scope.ServiceProvider;
 
-                ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
+            ITestObjectRepository testObjectRepository = scopedServices.GetRequiredService<ITestObjectRepository>();
 
-                TestXmlObject testObject  = CreateTestXmlObject();
+            TestXmlObject testObject  = CreateTestXmlObject();
 
-                // Assert
-                Assert.DoesNotThrowAsync(async () => await testObjectRepository.SaveTestXmlObject(testObject));
-            }
+            // Assert
+            Assert.DoesNotThrowAsync(async () => await testObjectRepository.SaveTestXmlObject(testObject));
         }
 
-        [Test, Order(8)]
+        [Test]
         public void When_Custom_Guid_Handler_Is_Registered_Exception_Should_Not_Be_Thrown()
         {
             ServiceCollection services =
@@ -180,22 +159,20 @@ namespace Dapper.CustomTypeHandlers.Tests
             
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            using (IServiceScope scope = serviceProvider.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
+            using IServiceScope scope = serviceProvider.CreateScope();
+            var scopedServices = scope.ServiceProvider;
 
-                ITestGuidRepository testGuidRepository = scopedServices.GetRequiredService<ITestGuidRepository>();
+            ITestGuidRepository testGuidRepository = scopedServices.GetRequiredService<ITestGuidRepository>();
 
-                TestGuidObject testGuidObject = CreateTestGuidObject();
+            TestGuidObject testGuidObject = CreateTestGuidObject();
                 
-                // Assert
-                Assert.DoesNotThrowAsync(async () => await testGuidRepository.SaveTestGuidObject(testGuidObject));
-                Assert.DoesNotThrowAsync(async () => await testGuidRepository.GetTestGuidObject(testGuidObject.Id));
-            }
+            // Assert
+            Assert.DoesNotThrowAsync(async () => await testGuidRepository.SaveTestGuidObject(testGuidObject));
+            Assert.DoesNotThrowAsync(async () => await testGuidRepository.GetTestGuidObject(testGuidObject.Id));
         }
 
         private TestJsonObject CreateTestJsonObject()
-            => new TestJsonObject
+            => new()
             {
                 FirstName = "John",
                 LastName = "Doe",
@@ -204,7 +181,7 @@ namespace Dapper.CustomTypeHandlers.Tests
             };
 
         private TestXmlObject CreateTestXmlObject()
-            => new TestXmlObject
+            => new()
             {
                 FirstName = "John",
                 LastName = "Doe",
@@ -213,7 +190,7 @@ namespace Dapper.CustomTypeHandlers.Tests
             };
         
         private TestGuidObject CreateTestGuidObject()
-            => new TestGuidObject
+            => new()
             {
                 GuidId = Guid.NewGuid()
             };
