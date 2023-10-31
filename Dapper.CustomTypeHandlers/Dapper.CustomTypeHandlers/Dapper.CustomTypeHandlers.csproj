@@ -1,23 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Authors>Jakub Kurłowicz</Authors>
-    <Copyright>2023</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>6.0.0</Version>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <Title>Dapper.CustomTypeHandlers</Title>
     <Description>Dapper custom type handlers to serialize/deserialize objects to Xml and Json.</Description>
     <PackageTags>dapper orm xml json database sql customhandlers</PackageTags>
     <PackageReleaseNotes>Added custom type handler for GUIDs and changed the way how can configure the serializers during handlers registration</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/kubagdynia/Dapper.CustomTypeHandlers</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/kubagdynia/Dapper.CustomTypeHandlers</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Copyright>2023</Copyright>
+    <Version>2.0.0</Version>
+    <Authors>Jakub Kurłowicz</Authors>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.15" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-    <PackageReference Include="System.Text.Json" Version="6.0.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="System.Text.Json" Version="7.0.3" />
   </ItemGroup>
 
 </Project>
