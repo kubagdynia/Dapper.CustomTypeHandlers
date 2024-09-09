@@ -14,7 +14,7 @@ dotnet add package Dapper.CustomTypeHandlers
 
 or just copy into the project file to reference the package
 ```
-<PackageReference Include="Dapper.CustomTypeHandlers" Version="6.0.0" />
+<PackageReference Include="Dapper.CustomTypeHandlers" Version="2.3.0" />
 ```
 
 ### How to use
@@ -88,7 +88,7 @@ public async Task SaveBook(Book book)
 Every commit or pull request is built and tested on the Continuous Integration system.
 
 To test locally:
-- Download and install [.NET 6.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+- Download and install [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 - Clone or download source code
 ```
 git clone https://github.com/kubagdynia/Dapper.CustomTypeHandlers.git
@@ -98,9 +98,15 @@ git clone https://github.com/kubagdynia/Dapper.CustomTypeHandlers.git
 dotnet test ./Dapper.CustomTypeHandlers/
 ```
 
+### Code Examples
+
+- DapperMappers - An example of using Dapper with the custom Xml and Json mappers
+  https://github.com/kubagdynia/DapperMappers
+
+
 ### Technologies
 List of technologies, frameworks and libraries used for implementation:
-- [.NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) (platform)
+- [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (platform)
 - [Dapper](https://github.com/StackExchange/Dapper) (micro ORM)
 - [System.Text.Json](https://www.nuget.org/packages/System.Text.Json) (JSON serialization/deserialization)
 - [NUnit](https://nunit.org/) (testing framework)

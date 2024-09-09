@@ -5,20 +5,37 @@
     <Title>Dapper.CustomTypeHandlers</Title>
     <Description>Dapper custom type handlers to serialize/deserialize objects to Xml and Json.</Description>
     <PackageTags>dapper orm xml json database sql customhandlers</PackageTags>
-    <PackageReleaseNotes>Bump System.Text.Json to new version</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/kubagdynia/Dapper.CustomTypeHandlers</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/kubagdynia/Dapper.CustomTypeHandlers</PackageProjectUrl>
+    <PackageIcon>DapperCustomTypeHandlers.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>2024</Copyright>
-    <Version>2.2.1</Version>
+    <Copyright>Copyright (c) Jakub Kurłowicz 2023-2024</Copyright>
+    <Version>2.3.0</Version>
     <Authors>Jakub Kurłowicz</Authors>
+    <PackageReleaseNotes>Including the symbols in the NuGet package.</PackageReleaseNotes>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <!-- If all members are not documented, you can disable the compiler warnings -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
     <PackageReference Include="System.Text.Json" Version="8.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\DapperCustomTypeHandlers.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
