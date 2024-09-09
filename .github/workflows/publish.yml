@@ -1,0 +1,56 @@
+name: Publish Nuget package
+
+on:
+  release:
+    types:
+      - published # Run the workflow when a release is published
+
+env:
+  working-directory: ./Dapper.CustomTypeHandlers
+  NuGetDirectory: ${{ github.workspace}}/nuget
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+          
+      - name: Display dotnet version
+        run: dotnet --version
+        
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: ${{env.working-directory}}
+        
+      - name: Build the project
+        run: dotnet build --configuration Release --no-restore
+        working-directory: ${{env.working-directory}}
+        
+      - name: Run tests
+        run: dotnet test --configuration Release --no-build --verbosity normal
+        working-directory: ${{env.working-directory}}
+        
+      # Create the NuGet package in the folder from the environment variable NuGetDirectory
+      - name: Pack the NuGet package
+        run: dotnet pack ./Dapper.CustomTypeHandlers --configuration Release --no-build --output ${{env.NuGetDirectory}}
+        working-directory: ${{env.working-directory}}
+        
+      # List the NuGet package
+      - name: List the NuGet package
+        run: ls ${{env.NuGetDirectory}}
+        
+      # Publish the NuGet package as an artifact, so it can be used in other workflows or in the following jobs
+      - name: Publish the NuGet package as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget
+          if-no-files-found: error
+          retention-days: 7
+          path: ${{env.NuGetDirectory}}/*.nupkg
