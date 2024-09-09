@@ -54,3 +54,26 @@ jobs:
           if-no-files-found: error
           retention-days: 7
           path: ${{env.NuGetDirectory}}/*.nupkg
+          
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+      - name: Download the NuGet package
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget
+          path: ${{ env.NuGetDirectory }}
+
+      - name: List the NuGet package
+        run: ls ${{env.NuGetDirectory}}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Publish the NuGet package
+        run: |
+          dotnet nuget push ${{env.NuGetDirectory}}/*.nupkg --api-key ${{ secrets.NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
