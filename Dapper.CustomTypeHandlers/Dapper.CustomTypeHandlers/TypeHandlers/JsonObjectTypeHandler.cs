@@ -3,38 +3,37 @@ using System.Data;
 using System.Text.Json;
 using Dapper.CustomTypeHandlers.Exceptions;
 
-namespace Dapper.CustomTypeHandlers.TypeHandlers
+namespace Dapper.CustomTypeHandlers.TypeHandlers;
+
+public class JsonObjectTypeHandler : SqlMapper.ITypeHandler
 {
-    public class JsonObjectTypeHandler : SqlMapper.ITypeHandler
+    private readonly JsonSerializerOptions _options;
+
+    public JsonObjectTypeHandler(JsonSerializerOptions options)
     {
-        private readonly JsonSerializerOptions _options;
+        _options = options;
+    }
 
-        public JsonObjectTypeHandler(JsonSerializerOptions options)
+    public object Parse(Type destinationType, object value)
+    {
+        if (!typeof(IJsonObjectType).IsAssignableFrom(destinationType))
         {
-            _options = options;
+            throw new DapperParseJsonObjectException(destinationType);
         }
 
-        public object Parse(Type destinationType, object value)
+        try
         {
-            if (!typeof(IJsonObjectType).IsAssignableFrom(destinationType))
-            {
-                throw new DapperParseJsonObjectException(destinationType);
-            }
-
-            try
-            {
-                return JsonSerializer.Deserialize(value.ToString(), destinationType, _options);
-            }
-            catch (Exception e)
-            {
-                throw new DapperParseJsonObjectException(value, e);
-            }
+            return JsonSerializer.Deserialize(value.ToString(), destinationType, _options);
         }
-
-        public void SetValue(IDbDataParameter parameter, object value)
+        catch (Exception e)
         {
-            parameter.Value = value is null or DBNull ? DBNull.Value : JsonSerializer.Serialize(value, _options);
-            parameter.DbType = DbType.String;
+            throw new DapperParseJsonObjectException(value, e);
         }
+    }
+
+    public void SetValue(IDbDataParameter parameter, object value)
+    {
+        parameter.Value = value is null or DBNull ? DBNull.Value : JsonSerializer.Serialize(value, _options);
+        parameter.DbType = DbType.String;
     }
 }

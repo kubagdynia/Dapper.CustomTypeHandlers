@@ -1,8 +1,7 @@
-﻿namespace Dapper.CustomTypeHandlers.TypeHandlers
+﻿namespace Dapper.CustomTypeHandlers.TypeHandlers;
+
+// Marker
+public interface IXmlObjectType
 {
-    // Marker
-    public interface IXmlObjectType
-    {
         
-    }
 }
