@@ -1,11 +1,10 @@
 ﻿using System.Data;
 
-namespace Dapper.CustomTypeHandlers.Tests.DbConnection
-{
-    internal interface IDbConnectionFactory
-    {
-        IDbConnection Connection();
+namespace Dapper.CustomTypeHandlers.Tests.DbConnection;
 
-        IDbConnection Connection(string name);
-    }
+internal interface IDbConnectionFactory
+{
+    IDbConnection Connection();
+
+    IDbConnection Connection(string name);
 }

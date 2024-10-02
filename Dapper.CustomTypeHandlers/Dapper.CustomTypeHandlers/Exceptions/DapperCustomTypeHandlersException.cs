@@ -1,12 +1,11 @@
 using System;
 
-namespace Dapper.CustomTypeHandlers.Exceptions
+namespace Dapper.CustomTypeHandlers.Exceptions;
+
+public abstract class DapperCustomTypeHandlersException : Exception
 {
-    public abstract class DapperCustomTypeHandlersException : Exception
+    protected DapperCustomTypeHandlersException(string message) : base(message)
     {
-        protected DapperCustomTypeHandlersException(string message) : base(message)
-        {
             
-        }
     }
 }

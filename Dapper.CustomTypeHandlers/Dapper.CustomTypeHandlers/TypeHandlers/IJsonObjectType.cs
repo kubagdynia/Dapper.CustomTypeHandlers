@@ -1,8 +1,7 @@
-﻿namespace Dapper.CustomTypeHandlers.TypeHandlers
+﻿namespace Dapper.CustomTypeHandlers.TypeHandlers;
+
+// Marker
+public interface IJsonObjectType
 {
-    // Marker
-    public interface IJsonObjectType
-    {
         
-    }
 }
