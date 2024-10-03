@@ -3,32 +3,31 @@ using Dapper.CustomTypeHandlers.Tests.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Dapper.CustomTypeHandlers.Tests.Helpers
+namespace Dapper.CustomTypeHandlers.Tests.Helpers;
+
+internal class ServiceCollectionBuilder
 {
-    internal class ServiceCollectionBuilder
+    public ServiceCollection PrepareServiceCollection(Action<ServiceCollection> serviceCollection = null)
     {
-        public ServiceCollection PrepareServiceCollection(Action<ServiceCollection> serviceCollection = null)
-        {
-            ServiceCollection services = new ServiceCollection();
+        var services = new ServiceCollection();
 
-            serviceCollection?.Invoke(services);
+        serviceCollection?.Invoke(services);
 
-            services.AddTransient<IDbConnectionFactory, SqliteConnectionFactory>();
-            services.AddTransient<ITestObjectRepository, TestObjectRepository>();
+        services.AddTransient<IDbConnectionFactory, SqliteConnectionFactory>();
+        services.AddTransient<ITestObjectRepository, TestObjectRepository>();
 
-            return services;
-        }
+        return services;
+    }
         
-        public ServiceCollection PrepareServiceCollectionForGuidTests(Action<ServiceCollection> serviceCollection = null)
-        {
-            ServiceCollection services = new ServiceCollection();
+    public ServiceCollection PrepareServiceCollectionForGuidTests(Action<ServiceCollection> serviceCollection = null)
+    {
+        var services = new ServiceCollection();
 
-            serviceCollection?.Invoke(services);
+        serviceCollection?.Invoke(services);
 
-            services.AddTransient<IDbConnectionFactory, SqliteConnectionFactoryForGuid>();
-            services.AddTransient<ITestGuidRepository, TestGuidRepository>();
+        services.AddTransient<IDbConnectionFactory, SqliteConnectionFactoryForGuid>();
+        services.AddTransient<ITestGuidRepository, TestGuidRepository>();
 
-            return services;
-        }
+        return services;
     }
 }

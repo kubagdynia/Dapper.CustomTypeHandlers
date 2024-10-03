@@ -6,61 +6,60 @@ using System.Xml.Serialization;
 using Dapper.CustomTypeHandlers.Exceptions;
 using Dapper.CustomTypeHandlers.Serializers;
 
-namespace Dapper.CustomTypeHandlers.TypeHandlers
+namespace Dapper.CustomTypeHandlers.TypeHandlers;
+
+public class XmlObjectTypeHandler : SqlMapper.ITypeHandler
 {
-    public class XmlObjectTypeHandler : SqlMapper.ITypeHandler
+    private readonly XmlWriterSettings _xmlWriterSettings;
+
+    public XmlObjectTypeHandler(XmlWriterSettings xmlWriterSettings)
     {
-        private readonly XmlWriterSettings _xmlWriterSettings;
+        _xmlWriterSettings = xmlWriterSettings;
+    }
 
-        public XmlObjectTypeHandler(XmlWriterSettings xmlWriterSettings)
+    public object Parse(Type destinationType, object value)
+    {
+        if (!typeof(IXmlObjectType).IsAssignableFrom(destinationType))
         {
-            _xmlWriterSettings = xmlWriterSettings;
+            throw new DapperParseXmlObjectException(destinationType);
         }
 
-        public object Parse(Type destinationType, object value)
+        if (value is null or DBNull)
         {
-            if (!typeof(IXmlObjectType).IsAssignableFrom(destinationType))
-            {
-                throw new DapperParseXmlObjectException(destinationType);
-            }
-
-            if (value is null or DBNull)
-            {
-                return null;
-            }
-
-            try
-            {
-                var result = DeserializeXml(destinationType, value);
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw new DapperParseXmlObjectException(value, e);
-            }
+            return null;
         }
 
-        public void SetValue(IDbDataParameter parameter, object value)
+        try
         {
-            parameter.Value = value is null or DBNull ? DBNull.Value : SerializeToXml(value);
-        }
-
-        private object SerializeToXml(object value)
-        {
-            var serializer = new XmlSerializer(value.GetType());
-
-            using var stream = new StringWriter();
-            using var writer = XmlWriter.Create(stream, _xmlWriterSettings);
-            serializer.Serialize(writer, value, BaseXmlOptions.WithoutNamespaces);
-            var result = stream.ToString();
+            var result = DeserializeXml(destinationType, value);
             return result;
         }
-
-        private object DeserializeXml(Type destinationType, object value)
+        catch (Exception e)
         {
-            var serializer = new XmlSerializer(destinationType);
-            using var stringReader = new StringReader((string)value);
-            return serializer.Deserialize(stringReader);
+            throw new DapperParseXmlObjectException(value, e);
         }
+    }
+
+    public void SetValue(IDbDataParameter parameter, object value)
+    {
+        parameter.Value = value is null or DBNull ? DBNull.Value : SerializeToXml(value);
+    }
+
+    private object SerializeToXml(object value)
+    {
+        var serializer = new XmlSerializer(value.GetType());
+
+        using var stream = new StringWriter();
+        using var writer = XmlWriter.Create(stream, _xmlWriterSettings);
+        serializer.Serialize(writer, value, BaseXmlOptions.WithoutNamespaces);
+        var result = stream.ToString();
+        return result;
+    }
+
+    private object DeserializeXml(Type destinationType, object value)
+    {
+        var serializer = new XmlSerializer(destinationType);
+        using var stringReader = new StringReader((string)value);
+        return serializer.Deserialize(stringReader);
     }
 }

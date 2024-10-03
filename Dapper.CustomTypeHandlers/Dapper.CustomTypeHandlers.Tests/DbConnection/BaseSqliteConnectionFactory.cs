@@ -3,53 +3,52 @@ using System;
 using System.Data;
 using System.IO;
 
-namespace Dapper.CustomTypeHandlers.Tests.DbConnection
+namespace Dapper.CustomTypeHandlers.Tests.DbConnection;
+
+internal abstract class BaseSqliteConnectionFactory : IDbConnectionFactory
 {
-    internal abstract class BaseSqliteConnectionFactory : IDbConnectionFactory
+    private readonly string _fileName;
+
+    protected BaseSqliteConnectionFactory(string dbFilename)
     {
-        private readonly string _fileName;
+        _fileName = Path.Combine(Environment.CurrentDirectory, dbFilename);
+        InitializeDatabase();
+    }
 
-        protected BaseSqliteConnectionFactory(string dbFilename)
+    public IDbConnection Connection()
+    {
+        var connectionString = $"DataSource={_fileName}";
+        var conn = new SqliteConnection(connectionString);
+
+        return conn;
+    }
+
+    public IDbConnection Connection(string name)
+    {
+        return Connection();
+    }
+
+    protected abstract void CreateDb(IDbConnection dbConnection);
+
+    private void InitializeDatabase()
+    {
+        if (File.Exists(_fileName))
         {
-            _fileName = Path.Combine(Environment.CurrentDirectory, dbFilename);
-            InitializeDatabase();
+            return;
         }
 
-        public IDbConnection Connection()
-        {
-            var connectionString = $"DataSource={_fileName}";
-            var conn = new SqliteConnection(connectionString);
+        FileStream fileStream = File.Create(_fileName);
+        fileStream.Close();
 
-            return conn;
+        using var conn = Connection();
+        conn.Open();
+        try
+        {
+            CreateDb(conn);
         }
-
-        public IDbConnection Connection(string name)
+        finally
         {
-            return Connection();
-        }
-
-        protected abstract void CreateDb(IDbConnection dbConnection);
-
-        private void InitializeDatabase()
-        {
-            if (File.Exists(_fileName))
-            {
-                return;
-            }
-
-            FileStream fileStream = File.Create(_fileName);
-            fileStream.Close();
-
-            using var conn = Connection();
-            conn.Open();
-            try
-            {
-                CreateDb(conn);
-            }
-            finally
-            {
-                conn.Close();
-            }
+            conn.Close();
         }
     }
 }
