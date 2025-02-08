@@ -23,7 +23,7 @@ public class JsonObjectTypeHandler : SqlMapper.ITypeHandler
 
         try
         {
-            return JsonSerializer.Deserialize(value.ToString(), destinationType, _options);
+            return JsonSerializer.Deserialize(value.ToString()!, destinationType, _options);
         }
         catch (Exception e)
         {
