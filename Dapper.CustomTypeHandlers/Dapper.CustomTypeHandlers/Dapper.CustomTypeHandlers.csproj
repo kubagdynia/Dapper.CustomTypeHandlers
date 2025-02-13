@@ -10,7 +10,7 @@
     <PackageProjectUrl>https://github.com/kubagdynia/Dapper.CustomTypeHandlers</PackageProjectUrl>
     <PackageIcon>DapperCustomTypeHandlers.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>Copyright (c) Jakub Kurłowicz 2023-2024</Copyright>
+    <Copyright>Copyright (c) Jakub Kurłowicz 2023-2025</Copyright>
     <Version>9.0.0</Version>
     <Authors>Jakub Kurłowicz</Authors>
     <PackageReleaseNotes>Upgrade to .NET 9.0</PackageReleaseNotes>
