@@ -11,9 +11,9 @@
     <PackageIcon>DapperCustomTypeHandlers.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>Copyright (c) Jakub Kurłowicz 2023-2024</Copyright>
-    <Version>2.3.1</Version>
+    <Version>9.0.0</Version>
     <Authors>Jakub Kurłowicz</Authors>
-    <PackageReleaseNotes>Fixed the security issue in System.Text.Json.</PackageReleaseNotes>
+    <PackageReleaseNotes>Upgrade to .NET 9.0</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EnablePackageValidation>true</EnablePackageValidation>
